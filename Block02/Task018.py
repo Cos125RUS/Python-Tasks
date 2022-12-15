@@ -11,17 +11,11 @@ for i in range(1, n+1):
 
 print(list)
 
-shuffle = 500
-j = 0
-i = 0
-
-while j < shuffle:
-    while i < n:
+for j in range(0,500):
+    for i in range(0,n):
         index = random.randrange(0, n-1)
         change = list[i]
         list[i] = list[index]
         list[index] = change
-        i+=1
-    j+=1
 
 print(list)
