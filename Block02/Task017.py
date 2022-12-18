@@ -2,20 +2,16 @@
 Найти произведение элементов на указанных позициях. 
 Позиции хранятся в файле file.txt в одной строке одно число'''
 
+import random
+
 n = int(input('N = '))
 list = []
 sum = 0
 
-if n > 0:
-    kef = 1
-else:
-    kef = -1
-
-for i in range(-n, n+kef, kef):
-    list.append(i)
+for i in range(n):
+    list.append(random.randrange(-n, n+1))
 
 print(list)
-
 
 pos = open('C:\\repo\Python\Tasks\Block02\\file.txt', 'r')
 
