@@ -2,9 +2,9 @@
 
 options = [True, False]
 
-for i in range(0,2):
-    for j in range(0,2):
-        for k in range(0,2):
+for i in range(2):
+    for j in range(2):
+        for k in range(2):
             x = options[i]
             y = options[j]
             z = options[k]
