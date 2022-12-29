@@ -4,56 +4,80 @@
 a.	Добавить возможность использования скобок, меняющих приоритет операций.
 Пример: 1+2*3 => 7; (1+2)*3 => 9;'''
 
-def mathematic(x,y,act):
-    if act == '+':
-        return x+y
-    elif act == '-':
-        return x-y
-    elif act == '*':
-        return x*y
-    else:#'/'
-        return x/y
 
-def priorities(nums,operation):
-    print(nums)
-    print(operation)
-
-def decomposition(text):
+'''def mathematic(text):
+    print(text)
     text += '.'
-    digits = []
     nums = []
     operation = []
-
+    s = 0
     for i in range(len(text)):
-        if text[i].isdigit():
-            digits.append(int(text[i]))
-        else:
-            if len(digits) > 0:
-                sum = 0
-                for j in range(len(digits)):
-                    sum += digits[j] * 10 ** (len(digits) - 1 - j)
-                nums.append(sum)
-                digits = []
+        if not text[i].isdigit():
+            nums.append(text[s:i])
+            s = i+1
             operation.append(text[i])
-    priorities(nums, operation)
+    print(nums)
+    print(operation)
+    res = ""
+    for i in range(len(operation)-1):
+        if operation[i] == '*' or operation[i] == '/':
+            a = str(int(nums[i])*int(nums[i+1]) if operation[i] == '*' else int(nums[i])/int(nums[i+1]))
+            nums[i + 1] = a
+            res += a
+    for i in range(len(operation)-1):
+        if operation[i] == '+' or operation[i] == '-':
+            a = str(int(nums[i])+int(nums[i+1]) if operation[i] == '+' else int(nums[i])-int(nums[i+1]))
+            nums[i + 1] = a
+            res += a
+    return res'''
+
+def action(n1,n2,operation):
+    if operation == '*' or operation == '/':
+        return str(n1 * n2 if operation == '*' else n1 / n2)
+    else:
+        return str(n1+n2 if operation == '+' else n1-n2)
+
+def mathematic(text, count, op1, op2):
+    for n in range(count):
+        for i in range(len(text)):
+            if text[i] == op1 or text[i] == op2:
+                operation = i
+                num1 = i-1
+                while text[num1].isdigit() and num1 > 0:
+                    num1 -= 1
+                if num1 > 0:
+                    num1 += 1
+                num2 = i+1
+                while num2+1 < len(text) and text[num2+1].isdigit():
+                    num2 += 1
+                res = str(action(int(text[num1:operation]), int(text[operation+1:num2+1]), text[operation]))
+                text = text.replace(text[num1:num2+1], res, 1)
+                break
+    return text
+def priority(text):
+    count = text.count('*') + text.count('/')
+    if count > 0:
+        text = mathematic(text, count, '*', '/')
+    count = text.count('+') + text.count('-')
+    if count > 0:
+        text = mathematic(text, count, '+', '-')
+    return text
 
 def parentheses(text):
-    arguments = text.split('(')
-    for i in range(len(arguments)):
-        if arguments[i].count(')') > 0:
-            a = arguments[i].split(')')
-            arguments[i] = a[0]
-            for j in range(1, len(a)):
-                arguments.insert(i+j, a[j])
-
-    '''a = arguments[1].split(')')
-    arguments[1] = a[0]
-    arguments.append(a[1])'''
-    print(arguments)
+    count = text.count('(')
+    if count > 0:
+        for n in range(count):
+            for i in range(len(text)):
+                if text[i] == '(':
+                    start = i + 1
+            for i in range(start, len(text)):
+                if text[i] == ')':
+                    end = i
+                    text = text.replace(text[start-1:end+1], priority(text[start:end]))
+                    break
+    text = priority(text)
+    return text
 
 text = str(input('Enter: '))
-if text.count('(') == 0 and text.count(')') == 0:
-    decomposition(text)
-else:
-    parentheses(text)
-
+text = parentheses(text)
+print(f'Result = {text}')
